@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xsi:schemaLocation="   
+          http://www.springframework.org/schema/beans   
+          http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+          http://www.springframework.org/schema/tx   
+          http://www.springframework.org/schema/tx/spring-tx-3.1.xsd  
+          http://www.springframework.org/schema/context   
+          http://www.springframework.org/schema/context/spring-context-3.1.xsd   
+          http://www.springframework.org/schema/aop   
+          http://www.springframework.org/schema/aop/spring-aop-3.1.xsd" default-autowire="byName">
+           
+     	<!-- 启动扫描所有的controller -->
+     <context:component-scan base-package="com.wftech.dao"/>
+     <context:component-scan base-package="com.wftech.service"/>
+     <context:component-scan base-package="com.wftech.domain"/>
+     <context:component-scan base-package="com.wftech.common"/>
+     <context:component-scan base-package="com.wftech.web"/>
+        <!-- 创建数据源   commons-dbcp.jar;     commons-pool.jar包-->
+     <bean id="propertyConfigurer"
+           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+           <property name="locations">
+                  <list>
+                         <value>WEB-INF/spring/database.properties</value>
+                  </list>
+           </property>
+      </bean>
+      
+
+ 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+     <bean id="simpleJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+        <constructor-arg><ref bean="dataSource"/></constructor-arg>
+     </bean> 
+     
+     <!-- 看了spring源码，该 org.springframework.jdbc.core.JdbcTemplate类的继承类有dataSource属性，所以可以属性注入-->
+     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+         <property name="dataSource">
+             <ref bean="dataSource"/>
+         </property>
+     </bean>
+     
+     
+
+     <!-- 配置管理事务 -->
+  
+     <bean id="transactionManager"
+     	class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+     	p:dataSource-ref="dataSource"
+     	/>
+     <aop:config proxy-target-class="true">
+     	<aop:pointcut id="serviceMethod"
+     		expression="execution(* com.wftech.service..*(..))"/>
+     	<aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice"/>
+     </aop:config>
+     
+     
+     
+     
+     <tx:advice id="txAdvice" transaction-manager="transactionManager">
+     	<tx:attributes>
+     		<tx:method name="*"/>
+     	</tx:attributes>
+     </tx:advice>
+     
+	  <!-- 提供对lob字段的支持 -->
+	 <bean id="nativeJdbcExtractor"
+	  class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"
+	  lazy-init="true" />
+	
+	
+	 <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+	  lazy-init="true">
+	  <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor" />
+	 </bean>
+	 
+</beans>

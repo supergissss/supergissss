@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://common.wftech.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://common.wftech.com" xmlns:intf="http://common.wftech.com" xmlns:tns1="http://common.domain.wftech.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://common.wftech.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://common.domain.wftech.com"/>
+   <element name="back">
+    <complexType>
+     <sequence>
+      <element name="ca" type="tns1:Calculator"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="backResponse">
+    <complexType>
+     <sequence>
+      <element name="backReturn" type="tns1:Calculator"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="calculate">
+    <complexType>
+     <sequence>
+      <element name="a" type="xsd:double"/>
+      <element name="b" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="calculateResponse">
+    <complexType>
+     <sequence>
+      <element name="calculateReturn" type="tns1:Calculator"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://common.domain.wftech.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="Calculator">
+    <sequence>
+     <element name="minus" type="xsd:double"/>
+     <element name="plus" type="xsd:double"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="backRequest">
+
+      <wsdl:part element="impl:back" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="calculateRequest">
+
+      <wsdl:part element="impl:calculate" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="backResponse">
+
+      <wsdl:part element="impl:backResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="calculateResponse">
+
+      <wsdl:part element="impl:calculateResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="CalculateService">
+
+      <wsdl:operation name="back">
+
+         <wsdl:input message="impl:backRequest" name="backRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:backResponse" name="backResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="calculate">
+
+         <wsdl:input message="impl:calculateRequest" name="calculateRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:calculateResponse" name="calculateResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="CalculateServiceSoapBinding" type="impl:CalculateService">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="back">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="backRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="backResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="calculate">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="calculateRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="calculateResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="CalculateServiceService">
+
+      <wsdl:port binding="impl:CalculateServiceSoapBinding" name="CalculateService">
+
+         <wsdlsoap:address location="http://localhost:8080/forum/services/CalculateService"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
